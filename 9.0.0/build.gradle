@@ -82,16 +82,19 @@ repositories {
             includeGroup "curse.maven"
         }
     }
+
+    flatDir {
+         dir 'libs'
+    }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
     
 	compileOnly fg.deobf("mezz.jei:jei-1.16.5:${project.jei_version}:api")
-	runtimeOnly fg.deobf("mezz.jei:jei-1.16.5:${project.jei_version}")   
-	 
-    compileOnly fg.deobf("mcp.mobius.waila:Hwyla:${project.hwyla_version}:api")
-    runtimeOnly fg.deobf("mcp.mobius.waila:Hwyla:${project.hwyla_version}")
+	runtimeOnly fg.deobf("mezz.jei:jei-1.16.5:${project.jei_version}")
+
+    implementation fileTree(dir: 'libs', include: '*.jar')
 
 	compileOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-1.16:${project.top_version}:api")
 	runtimeOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-1.16:${project.top_version}")
