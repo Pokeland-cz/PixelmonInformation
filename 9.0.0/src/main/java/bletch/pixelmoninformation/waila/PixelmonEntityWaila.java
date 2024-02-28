@@ -545,8 +545,8 @@ public class PixelmonEntityWaila implements IEntityComponentProvider , IServerDa
 			String npcName = "";
 
 			if (entity instanceof NPCFisherman) {
-				NPCFisherman entityNPC = (NPCFisherman)entity;
-				npcName = entityNPC.getDisplayText();
+				// NPCFisherman entityNPC = (NPCFisherman)entity;
+				npcName = "Old Fisherman";
 			}
 
 			if (entity instanceof NPCNurseJoy) {
@@ -563,8 +563,8 @@ public class PixelmonEntityWaila implements IEntityComponentProvider , IServerDa
 			}
 
 			if (entity instanceof NPCRelearner) {
-				NPCRelearner entityNPC = (NPCRelearner)entity;
-				npcName = entityNPC.getDisplayText();
+				// NPCRelearner entityNPC = (NPCRelearner)entity;
+				npcName = "Move Relearner";
 			}
 
 			if (entity instanceof NPCShopkeeper) {
@@ -574,7 +574,7 @@ public class PixelmonEntityWaila implements IEntityComponentProvider , IServerDa
 
 			if (entity instanceof NPCTrader) {
 				NPCTrader entityNPC = (NPCTrader)entity;
-				npcName = entityNPC.getDisplayText();
+				npcName = entityNPC.getNickName();
 			}
 
 			if (entity instanceof NPCTrainer) {
@@ -583,8 +583,8 @@ public class PixelmonEntityWaila implements IEntityComponentProvider , IServerDa
 			}
 
 			if (entity instanceof NPCTutor) {
-				NPCTutor entityNPC = (NPCTutor)entity;
-				npcName = entityNPC.getDisplayText();
+				// NPCTutor entityNPC = (NPCTutor)entity;
+				npcName = "Tutor";
 			}
 
 			if (StringUtils.isNullOrWhitespace(npcName) && entity instanceof NPCChatting) {
