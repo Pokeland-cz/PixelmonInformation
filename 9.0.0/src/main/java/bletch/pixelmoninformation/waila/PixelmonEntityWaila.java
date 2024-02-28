@@ -501,14 +501,17 @@ public class PixelmonEntityWaila implements IEntityComponentProvider , IServerDa
 
 				if (I18n.exists(translateKey) && !StringUtils.isNullOrWhitespace(output)) {
 					String caughtStatus = TextUtils.SYMBOL_UNKNOWN;
+					String basic = TextUtils.SYMBOL_UNKNOWN;
 
 					ClientPlayerPokedex pokedex = PixelmonUtils.getClientPokedex();
 
 					if (pokedex != null) {
 						caughtStatus = pokedex.hasCaught(pokemonSpecies) ? TextUtils.SYMBOL_GREENTICK : TextUtils.SYMBOL_REDCROSS;
+						basic = stats.getPreEvolutions().isEmpty() ? TextUtils.SYMBOL_GREENTICK : TextUtils.SYMBOL_REDCROSS;
 					}
 
 					tooltip.add(new StringTextComponent(TextFormatting.DARK_AQUA + output + " " + TextFormatting.WHITE + caughtStatus));
+					tooltip.add(new StringTextComponent(TextFormatting.DARK_AQUA + "Bez předevoluce (zapisuje se do dexu): " + TextFormatting.WHITE + basic));
 				}
 			}
 		}
