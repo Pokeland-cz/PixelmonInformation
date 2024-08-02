@@ -507,11 +507,14 @@ public class PixelmonEntityWaila implements IEntityComponentProvider , IServerDa
 
 					if (pokedex != null) {
 						caughtStatus = pokedex.hasCaught(pokemonSpecies) ? TextUtils.SYMBOL_GREENTICK : TextUtils.SYMBOL_REDCROSS;
-						basic = stats.getPreEvolutions().isEmpty() ? TextUtils.SYMBOL_GREENTICK : TextUtils.SYMBOL_REDCROSS;
+						basic = stats.getPreEvolutions().isEmpty() ? "chycením pokémona" : "pouze při evoluci z předvývoje";
 					}
 
 					tooltip.add(new StringTextComponent(TextFormatting.DARK_AQUA + output + " " + TextFormatting.WHITE + caughtStatus));
-					tooltip.add(new StringTextComponent(TextFormatting.DARK_AQUA + "Bez předevoluce (zapisuje se do dexu): " + TextFormatting.WHITE + basic));
+
+					if (!pokedex.hasCaught(pokemonSpecies)) {
+						tooltip.add(new StringTextComponent(TextFormatting.DARK_AQUA + "Zapíšeš do dexu " + TextFormatting.GOLD + basic));
+					}
 				}
 			}
 		}

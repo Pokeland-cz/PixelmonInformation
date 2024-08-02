@@ -1,137 +1,136 @@
 package bletch.pixelmoninformation.top;
 
-import java.util.List;
-
+import bletch.pixelmoninformation.utils.StringUtils;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-
-import bletch.pixelmoninformation.utils.StringUtils;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.api.IElementFactory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
 
+import java.util.List;
+
 public class WrappedTextElement implements IElement {
 
-	public static int ELEMENT_ID = -1;
-	private String text;
-	private int maxLines;
+    public static int ELEMENT_ID = -1;
+    private String text;
+    private int maxLines;
 
-	private List<String> textLines;
-	private int width;
-	private int height;
+    private List<String> textLines;
+    private int width;
+    private int height;
 
-	public WrappedTextElement(String text) {
-		PopulateServerDetails(text,  4);
-	}
+    public WrappedTextElement(String text) {
+        PopulateServerDetails(text, 4);
+    }
 
-	public WrappedTextElement(String text, int maxLines) {
-		PopulateServerDetails(text,  maxLines);
-	}
+    public WrappedTextElement(String text, int maxLines) {
+        PopulateServerDetails(text, maxLines);
+    }
 
-	protected WrappedTextElement(String text, int maxLines, boolean isClient) { 		
-		if (isClient) {
-			PopulateClientDetails(text, maxLines);
-		} else {
-			PopulateServerDetails(text, maxLines);
-		}
-	}	
+    protected WrappedTextElement(String text, int maxLines, boolean isClient) {
+        if (isClient) {
+            PopulateClientDetails(text, maxLines);
+        } else {
+            PopulateServerDetails(text, maxLines);
+        }
+    }
 
-	@Override
-	public int getHeight() {
-		return this.height;
-	}
+    @SuppressWarnings("deprecation")
+    public static int renderText(Minecraft mc, MatrixStack matrixStack, int x, int y, String txt) {
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0f);
 
-	@Override
-	public int getID() {
-		return ELEMENT_ID;
-	}
+        matrixStack.pushPose();
+        matrixStack.translate(0.0F, 0.0F, 32.0F);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.enableRescaleNormal();
+        RenderSystem.enableLighting();
+        net.minecraft.client.renderer.RenderHelper.setupFor3DItems();
 
-	@Override
-	public int getWidth() {		
-		return this.width;
-	}
+        RenderSystem.disableLighting();
+        RenderSystem.disableDepthTest();
+        RenderSystem.disableBlend();
+        int width = mc.font.width(txt);
+        mc.font.drawShadow(matrixStack, txt, x, y, 16777215);
+        RenderSystem.enableLighting();
+        RenderSystem.enableDepthTest();
+        // Fixes opaque cooldown overlay a bit lower
+        RenderSystem.enableBlend();
 
-	@Override
-	public void render(MatrixStack matrixStack, int x, int y) {
-		Minecraft minecraft = Minecraft.getInstance();
-		int lineY = y;
+        matrixStack.popPose();
+        RenderSystem.disableRescaleNormal();
+        RenderSystem.disableLighting();
 
-		for (String line : this.textLines) {
-			renderText(minecraft, matrixStack, x, lineY, line);
-			lineY += minecraft.font.lineHeight;
-		}
-	}
+        return width;
+    }
 
-	@Override
-	public void toBytes(PacketBuffer buf) {
-		buf.writeUtf(this.text);
-		buf.writeInt(this.maxLines);
-	}
+    @Override
+    public int getHeight() {
+        return this.height;
+    }
 
-	protected void PopulateClientDetails(String text, int maxLines) {
-		Minecraft minecraft = Minecraft.getInstance();
+    @Override
+    public int getID() {
+        return ELEMENT_ID;
+    }
 
-		this.text = text; 
-		this.maxLines = maxLines;
+    @Override
+    public int getWidth() {
+        return this.width;
+    }
 
-		this.textLines = StringUtils.split(text, minecraft, maxLines);
-		this.width = 0; 
-		this.height = Math.max(0, minecraft.font.lineHeight * this.textLines.size());		
+    @Override
+    public void render(MatrixStack matrixStack, int x, int y) {
+        Minecraft minecraft = Minecraft.getInstance();
+        int lineY = y;
 
-		for (String line : this.textLines) {
-			int lineWidth = minecraft.font.width(line);
-			this.width = Math.max(this.width, lineWidth);
-		}
-	}
+        for (String line : this.textLines) {
+            renderText(minecraft, matrixStack, x, lineY, line);
+            lineY += minecraft.font.lineHeight;
+        }
+    }
 
-	protected void PopulateServerDetails(String text, int maxLines) {
-		this.text = text;  
-		this.maxLines = maxLines;
+    @Override
+    public void toBytes(PacketBuffer buf) {
+        buf.writeUtf(this.text);
+        buf.writeInt(this.maxLines);
+    }
 
-		this.width = 0; 
-		this.height = 0;
-		this.textLines = null;
-	}    
+    protected void PopulateClientDetails(String text, int maxLines) {
+        Minecraft minecraft = Minecraft.getInstance();
 
-	@SuppressWarnings("deprecation")
-	public static int renderText(Minecraft mc, MatrixStack matrixStack, int x, int y, String txt) {
-		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0f);
+        this.text = text;
+        this.maxLines = maxLines;
 
-		matrixStack.pushPose();
-		matrixStack.translate(0.0F, 0.0F, 32.0F);
-		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		RenderSystem.enableRescaleNormal();
-		RenderSystem.enableLighting();
-		net.minecraft.client.renderer.RenderHelper.setupFor3DItems();
+        this.textLines = StringUtils.split(text, minecraft, maxLines);
+        this.width = 0;
+        this.height = Math.max(0, minecraft.font.lineHeight * this.textLines.size());
 
-		RenderSystem.disableLighting();
-		RenderSystem.disableDepthTest();
-		RenderSystem.disableBlend();
-		int width = mc.font.width(txt);
-		mc.font.drawShadow(matrixStack, txt, x, y, 16777215);
-		RenderSystem.enableLighting();
-		RenderSystem.enableDepthTest();
-		// Fixes opaque cooldown overlay a bit lower
-		RenderSystem.enableBlend();
+        for (String line : this.textLines) {
+            int lineWidth = minecraft.font.width(line);
+            this.width = Math.max(this.width, lineWidth);
+        }
+    }
 
-		matrixStack.popPose();
-		RenderSystem.disableRescaleNormal();
-		RenderSystem.disableLighting();
+    protected void PopulateServerDetails(String text, int maxLines) {
+        this.text = text;
+        this.maxLines = maxLines;
 
-		return width;
-	}
+        this.width = 0;
+        this.height = 0;
+        this.textLines = null;
+    }
 
-	public static class Factory implements IElementFactory {
+    public static class Factory implements IElementFactory {
 
-		@Override
-		public IElement createElement(PacketBuffer buf) {
-			String text = buf.readUtf();
-			int maxLines = buf.readInt();
+        @Override
+        public IElement createElement(PacketBuffer buf) {
+            String text = buf.readUtf();
+            int maxLines = buf.readInt();
 
-			return new WrappedTextElement(text, maxLines, true);
-		}
+            return new WrappedTextElement(text, maxLines, true);
+        }
 
-	}
+    }
 
 }

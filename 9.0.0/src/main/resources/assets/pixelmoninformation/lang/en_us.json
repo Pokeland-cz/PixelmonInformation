@@ -40,7 +40,7 @@
     "_comment": "== Tooltips ==",
 
     "_comment": "== Pokemon ==",
-    "gui.pokemon.caught": "Již chycen:",
+    "gui.pokemon.caught": "Již v dexu:",
     "gui.pokemon.dexnum": "Pokédex #:",
     "gui.pokemon.evstats": "EV Staty:",
     "gui.pokemon.evyield": "EV drop:",
